@@ -11,21 +11,21 @@ class ProyekResourceTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_guests_are_redirected_from_admin_dashboard()
+    public function test_tamu_diarahkan_dari_dasbor_admin()
     {
         $response = $this->get('/admin');
 
         $response->assertRedirect('/admin/login');
     }
 
-    public function test_guests_are_redirected_from_proyeks_index()
+    public function test_tamu_diarahkan_dari_indeks_proyek()
     {
         $response = $this->get('/admin/proyeks');
 
         $response->assertRedirect('/admin/login');
     }
 
-    public function test_authenticated_users_can_access_admin_dashboard()
+    public function test_pengguna_terautentikasi_dapat_mengakses_dasbor_admin()
     {
         $user = User::factory()->create();
 
@@ -34,7 +34,7 @@ class ProyekResourceTest extends TestCase
         $response->assertSuccessful();
     }
 
-    public function test_authenticated_users_can_access_proyeks_index()
+    public function test_pengguna_terautentikasi_dapat_mengakses_indeks_proyek()
     {
         $user = User::factory()->create();
 

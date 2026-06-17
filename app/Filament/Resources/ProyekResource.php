@@ -31,7 +31,7 @@ class ProyekResource extends Resource
                             ->label('Nama Proyek')
                             ->required()
                             ->maxLength(255)
-                            ->reactive()
+                            ->live(onBlur: true)
                             ->afterStateUpdated(fn ($state, callable $set) => $set('tautan_slug', Str::slug($state))),
                         
                         Forms\Components\TextInput::make('tautan_slug')

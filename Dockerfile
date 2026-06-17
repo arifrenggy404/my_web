@@ -21,11 +21,12 @@ RUN apt-get update && apt-get install -y \
     git \
     curl \
     libsqlite3-dev \
+    libicu-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Install ekstensi PHP
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install -j$(nproc) gd zip pdo pdo_sqlite opcache bcmath pcntl
+    && docker-php-ext-install -j$(nproc) gd zip pdo pdo_sqlite opcache bcmath pcntl intl
 
 # Salin konfigurasi Nginx & Supervisor
 COPY docker/nginx.conf /etc/nginx/sites-available/default

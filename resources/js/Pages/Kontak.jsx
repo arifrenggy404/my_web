@@ -1,11 +1,25 @@
 import React from 'react';
 import ArsipLayout from '../Layouts/ArsipLayout';
-import { Github, Linkedin, MessageSquare, Globe, Mail, ChevronRight } from 'lucide-react';
+import { MessageSquare, Globe, Mail, ChevronRight } from 'lucide-react';
+
+const IkonGithub = ({ size = 20, ...props }) => (
+  <svg viewBox="0 0 24 24" width={size} height={size} stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" {...props}>
+    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
+  </svg>
+);
+
+const IkonLinkedin = ({ size = 20, ...props }) => (
+  <svg viewBox="0 0 24 24" width={size} height={size} stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" {...props}>
+    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+    <rect x="2" y="9" width="4" height="12" />
+    <circle cx="4" cy="4" r="2" />
+  </svg>
+);
 
 export default function Kontak() {
     const contacts = [
-        { name: 'GitHub', icon: Github, url: 'https://github.com/arifrenggy00', label: '@arifrenggy00', color: 'hover:text-white' },
-        { name: 'LinkedIn', icon: Linkedin, url: '#', label: 'Arif Renggy', color: 'hover:text-[#00f0ff]' },
+        { name: 'GitHub', icon: IkonGithub, url: 'https://github.com/arifrenggy00', label: '@arifrenggy00', color: 'hover:text-white' },
+        { name: 'LinkedIn', icon: IkonLinkedin, url: '#', label: 'Arif Renggy', color: 'hover:text-[#00f0ff]' },
         { name: 'WhatsApp', icon: MessageSquare, url: '#', label: 'MISI_LANGSUNG', color: 'hover:text-[#fee715]' },
         { name: 'Email', icon: Mail, url: 'mailto:arifrenggy404@gmail.com', label: 'arifrenggy404@gmail.com', color: 'hover:text-[#ff007f]' },
         { name: 'Website', icon: Globe, url: 'https://portofolio-cyberpunk-production.up.railway.app', label: 'PORT_PROD_V1', color: 'hover:text-[#00f0ff]' }

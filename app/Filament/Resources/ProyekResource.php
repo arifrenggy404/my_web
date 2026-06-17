@@ -7,6 +7,7 @@ use App\Models\Proyek;
 use Filament\Actions;
 use Filament\Forms;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -24,11 +25,11 @@ class ProyekResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Daftar Proyek';
 
-    public static function form(Schema $form): Schema
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\Section::make()
+        return $schema
+            ->components([
+                Section::make()
                     ->schema([
                         Forms\Components\TextInput::make('nama_proyek')
                             ->label('Nama Proyek')

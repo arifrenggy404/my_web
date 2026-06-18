@@ -28,6 +28,21 @@ export default function ArsipLayout({ children }) {
     };
 
     useEffect(() => {
+        // Load theme from localStorage on mount
+        const savedTheme = localStorage.getItem('terminal-theme') || 'cyber';
+        const themes = {
+            cyber: { primary: '#00f0ff', accent: '#ff007f', warning: '#fee715', bg: '#0a0a0c', muted: 'rgba(0, 240, 255, 0.1)' },
+            matrix: { primary: '#00ff00', accent: '#008000', warning: '#adff2f', bg: '#050505', muted: 'rgba(0, 255, 0, 0.1)' },
+            deus: { primary: '#fee715', accent: '#ff8c00', warning: '#ffffff', bg: '#0f0e0a', muted: 'rgba(254, 231, 21, 0.1)' },
+            vapor: { primary: '#ff007f', accent: '#00f0ff', warning: '#da70d6', bg: '#0f0a1c', muted: 'rgba(255, 0, 127, 0.1)' }
+        };
+        const t = themes[savedTheme] || themes.cyber;
+        document.documentElement.style.setProperty('--color-terminal-primary', t.primary);
+        document.documentElement.style.setProperty('--color-terminal-accent', t.accent);
+        document.documentElement.style.setProperty('--color-terminal-warning', t.warning);
+        document.documentElement.style.setProperty('--color-terminal-bg', t.bg);
+        document.documentElement.style.setProperty('--color-terminal-muted', t.muted);
+
         // Initial Logs
         setTimeout(() => addLog('KERNEL_LOADED_V4.0', 'SYS'), 500);
         setTimeout(() => addLog('SECURE_HANDSHAKE_COMPLETE', 'SEC'), 1200);
@@ -84,9 +99,9 @@ export default function ArsipLayout({ children }) {
 
             {/* CRT Glitch Transition Overlay */}
             {isTransitioning && (
-                <div className="fixed inset-0 bg-black/90 z-[90] flex flex-col justify-center items-center font-mono text-[#00f0ff] animate-crt-flicker pointer-events-auto select-none">
+                <div className="fixed inset-0 bg-black/90 z-[90] flex flex-col justify-center items-center font-mono text-terminal-primary animate-crt-flicker pointer-events-auto select-none">
                     <div className="absolute inset-0 scanline opacity-30 pointer-events-none"></div>
-                    <div className="absolute inset-0 bg-gradient-to-b from-[#00f0ff]/5 via-transparent to-[#00f0ff]/5 pointer-events-none"></div>
+                    <div className="absolute inset-0 bg-gradient-to-b from-terminal-primary/5 via-transparent to-terminal-primary/5 pointer-events-none"></div>
                     
                     <div className="space-y-4 text-center">
                         <div className="text-sm tracking-widest text-neon-cyan animate-pulse">
@@ -143,7 +158,7 @@ export default function ArsipLayout({ children }) {
 
             <button
                 onClick={() => setIsCliOpen(true)}
-                className="fixed bottom-6 right-6 w-12 h-12 bg-black border border-terminal-primary rounded-full flex items-center justify-center text-terminal-primary hover:bg-terminal-primary hover:text-black transition-all cursor-pointer z-[60] shadow-[0_0_15px_rgba(0,240,255,0.4)] hover:shadow-[0_0_25px_rgba(0,240,255,0.8)] animate-pulse"
+                className="fixed bottom-6 right-6 w-12 h-12 bg-black border border-terminal-primary rounded-full flex items-center justify-center text-terminal-primary hover:bg-terminal-primary hover:text-black transition-all cursor-pointer z-[60] shadow-[0_0_15px_var(--color-terminal-primary)] hover:shadow-[0_0_25px_var(--color-terminal-primary)] transition-shadow duration-300 animate-pulse"
                 title="Switch to CLI Mode"
             >
                 <Terminal size={22} />

@@ -1,6 +1,49 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Terminal, X } from 'lucide-react';
 
+const themes = {
+    cyber: {
+        primary: '#00f0ff',
+        accent: '#ff007f',
+        warning: '#fee715',
+        bg: '#0a0a0c',
+        muted: 'rgba(0, 240, 255, 0.1)'
+    },
+    matrix: {
+        primary: '#00ff00',
+        accent: '#008000',
+        warning: '#adff2f',
+        bg: '#050505',
+        muted: 'rgba(0, 255, 0, 0.1)'
+    },
+    deus: {
+        primary: '#fee715',
+        accent: '#ff8c00',
+        warning: '#ffffff',
+        bg: '#0f0e0a',
+        muted: 'rgba(254, 231, 21, 0.1)'
+    },
+    vapor: {
+        primary: '#ff007f',
+        accent: '#00f0ff',
+        warning: '#da70d6',
+        bg: '#0f0a1c',
+        muted: 'rgba(255, 0, 127, 0.1)'
+    }
+};
+
+const applyTheme = (themeName) => {
+    const t = themes[themeName];
+    if (!t) return false;
+    document.documentElement.style.setProperty('--color-terminal-primary', t.primary);
+    document.documentElement.style.setProperty('--color-terminal-accent', t.accent);
+    document.documentElement.style.setProperty('--color-terminal-warning', t.warning);
+    document.documentElement.style.setProperty('--color-terminal-bg', t.bg);
+    document.documentElement.style.setProperty('--color-terminal-muted', t.muted);
+    localStorage.setItem('terminal-theme', themeName);
+    return true;
+};
+
 export default function InteractiveCli({ isOpen, onClose }) {
     const [history, setHistory] = useState([]);
     const [historyIndex, setHistoryIndex] = useState(-1);
@@ -52,7 +95,9 @@ export default function InteractiveCli({ isOpen, onClose }) {
             ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            ctx.fillStyle = '#00f0ff';
+            const style = getComputedStyle(document.documentElement);
+            const primary = style.getPropertyValue('--color-terminal-primary').trim() || '#00f0ff';
+            ctx.fillStyle = primary;
             ctx.font = `${fontSize}px monospace`;
 
             for (let i = 0; i < drops.length; i++) {
@@ -117,6 +162,7 @@ export default function InteractiveCli({ isOpen, onClose }) {
                         '  weather               - Cyberpunk local ambient forecast',
                         '  ping                  - Test connection latency',
                         '  matrix                - Run canvas code waterfall',
+                        '  theme [theme_name]    - Swaps system UI color palette',
                         '  history               - History of input commands',
                         '  clear                 - Clean terminal window buffer',
                         '  exit / gui / close    - Re-engage graphical GUI',
@@ -248,6 +294,25 @@ export default function InteractiveCli({ isOpen, onClose }) {
                     setLogs([]);
                     break;
 
+                case 'theme':
+                    const selectedTheme = args[1];
+                    if (!selectedTheme) {
+                        setLogs(prev => [...prev,
+                            'USAGE: theme [themeName]',
+                            'AVAILABLE THEMES:',
+                            '  cyber  - Cyan/Pink neon (Default)',
+                            '  matrix - Hacker green screen',
+                            '  deus   - Amber gold Deus Ex',
+                            '  vapor  - Synthwave Pink/Cyan',
+                            ''
+                        ]);
+                    } else if (applyTheme(selectedTheme.toLowerCase())) {
+                        setLogs(prev => [...prev, `THEME SET TO: ${selectedTheme.toUpperCase()}`, '']);
+                    } else {
+                        setLogs(prev => [...prev, `ERROR: Theme "${selectedTheme}" not recognized.`, '']);
+                    }
+                    break;
+
                 case 'exit':
                 case 'gui':
                 case 'close':
@@ -285,7 +350,7 @@ export default function InteractiveCli({ isOpen, onClose }) {
     return (
         <div 
             onClick={() => inputRef.current?.focus()}
-            className="fixed inset-0 z-[70] bg-black/95 text-[#00f0ff] p-4 font-mono text-xs flex flex-col md:p-6 overflow-hidden"
+            className="fixed inset-0 z-[70] bg-black/95 text-terminal-primary p-4 font-mono text-xs flex flex-col md:p-6 overflow-hidden"
         >
             {isMatrixActive && (
                 <canvas 
@@ -294,14 +359,14 @@ export default function InteractiveCli({ isOpen, onClose }) {
                 />
             )}
             
-            <div className="flex justify-between items-center border-b border-[#00f0ff]/30 pb-2 mb-4 relative z-20">
+            <div className="flex justify-between items-center border-b border-terminal-primary/30 pb-2 mb-4 relative z-20">
                 <div className="flex items-center gap-2 text-neon-cyan">
                     <Terminal size={16} />
                     <span>visitor@arif-renggy: CLI_SESSION_ACTIVE</span>
                 </div>
                 <button 
                     onClick={onClose} 
-                    className="text-gray-500 hover:text-[#ff007f] transition-colors cursor-pointer"
+                    className="text-gray-500 hover:text-terminal-accent transition-colors cursor-pointer"
                 >
                     <X size={18} />
                 </button>
@@ -309,7 +374,7 @@ export default function InteractiveCli({ isOpen, onClose }) {
 
             <div 
                 ref={logContainerRef} 
-                className="flex-1 overflow-y-auto mb-4 space-y-1 scrollbar-thin scrollbar-thumb-[#00f0ff]/20 scrollbar-track-transparent relative z-20"
+                className="flex-1 overflow-y-auto mb-4 space-y-1 scrollbar-thin scrollbar-thumb-terminal-primary/20 scrollbar-track-transparent relative z-20"
             >
                 {logs.map((log, i) => (
                     <pre key={i} className="whitespace-pre-wrap leading-relaxed select-text font-mono">
@@ -319,14 +384,14 @@ export default function InteractiveCli({ isOpen, onClose }) {
             </div>
 
             <div className="flex items-center gap-2 relative z-20">
-                <span className="text-[#ff007f]">visitor@arif-renggy:~$</span>
+                <span className="text-terminal-accent">visitor@arif-renggy:~$</span>
                 <input
                     ref={inputRef}
                     type="text"
                     value={inputValue}
                     onChange={(e) => setInputValue(e.target.value)}
                     onKeyDown={handleKeyDown}
-                    className="flex-1 bg-transparent border-none outline-none text-[#00f0ff] font-mono caret-[#00f0ff] focus:ring-0 p-0"
+                    className="flex-1 bg-transparent border-none outline-none text-terminal-primary font-mono caret-terminal-primary focus:ring-0 p-0"
                     autoFocus
                     autoComplete="off"
                     autoCorrect="off"

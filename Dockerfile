@@ -26,7 +26,7 @@ RUN apt-get update && apt-get install -y \
 
 # Install ekstensi PHP
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install -j$(nproc) gd zip pdo pdo_sqlite opcache bcmath pcntl intl
+    && docker-php-ext-install -j$(nproc) gd zip pdo pdo_mysql pdo_sqlite opcache bcmath pcntl intl
 
 # Salin konfigurasi Nginx & Supervisor
 COPY docker/nginx.conf /etc/nginx/sites-available/default

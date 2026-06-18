@@ -15,9 +15,22 @@ export default function Arsenal() {
     return (
         <ArsipLayout>
             <Head>
-                <title>Pusat Arsenal</title>
+                <title>Pusat Arsenal Keahlian | Arif Renggy - Fullstack Developer</title>
                 <meta name="description" content="Keahlian teknis dan tumpukan teknologi (arsenal) Arif Renggy seperti Laravel, React, Tailwind CSS, Inertia.js, dan Docker." />
                 <meta name="keywords" content="Tech stack, Laravel skill, React skill, PHP, JavaScript, Docker, Tailwind" />
+                
+                {/* Open Graph / Facebook */}
+                <meta property="og:type" content="website" />
+                <meta property="og:url" content="https://arifrenggy.site/arsenal" />
+                <meta property="og:title" content="Pusat Arsenal Keahlian | Arif Renggy - Fullstack Developer" />
+                <meta property="og:description" content="Keahlian teknis dan tumpukan teknologi (arsenal) Arif Renggy seperti Laravel, React, Tailwind CSS, Inertia.js, dan Docker." />
+                <meta property="og:site_name" content="Arif Renggy Portfolio" />
+                
+                {/* Twitter */}
+                <meta name="twitter:card" content="summary" />
+                <meta name="twitter:url" content="https://arifrenggy.site/arsenal" />
+                <meta name="twitter:title" content="Pusat Arsenal Keahlian | Arif Renggy - Fullstack Developer" />
+                <meta name="twitter:description" content="Keahlian teknis dan tumpukan teknologi (arsenal) Arif Renggy seperti Laravel, React, Tailwind CSS, Inertia.js, dan Docker." />
             </Head>
             <div className="space-y-8">
                 <div className="flex justify-between items-center border-b border-gray-800 pb-2">
@@ -25,9 +38,9 @@ export default function Arsenal() {
                     <span className="text-[10px] text-gray-600 font-mono">STATUS_ALUTSISTA: OPTIMAL</span>
                 </div>
                 
-                <div className="grid grid-cols-1 gap-6">
+                <ul className="grid grid-cols-1 gap-6">
                     {skills.map(s => (
-                        <div key={s.name} className={`p-5 border transition-all ${s.isCore ? "border-terminal-accent/40 bg-terminal-accent/5 shadow-[0_0_15px_var(--color-terminal-muted)]" : "border-gray-800 bg-[#1a1a1c]/20 hover:border-gray-700"}`}>
+                        <li key={s.name} className={`p-5 border transition-all ${s.isCore ? "border-terminal-accent/40 bg-terminal-accent/5 shadow-[0_0_15px_var(--color-terminal-muted)]" : "border-gray-800 bg-[#1a1a1c]/20 hover:border-gray-700"}`}>
                             <div className="flex flex-row items-center justify-between gap-4 mb-4">
                                 <div className="space-y-1">
                                     <div className="flex items-center gap-2">
@@ -56,9 +69,9 @@ export default function Arsenal() {
                                     }}
                                 ></div>
                             </div>
-                        </div>
+                        </li>
                     ))}
-                </div>
+                </ul>
                 
                 <div className="p-4 border border-dashed border-gray-800 opacity-40 hover:opacity-100 transition-opacity">
                     <div className="text-[10px] font-mono text-gray-500 mb-2 uppercase tracking-widest">Analisis_Tambahan:</div>

@@ -546,14 +546,16 @@ export default function InteractiveCli({ isOpen, onClose }) {
             
             <div className="flex justify-between items-center border-b border-terminal-primary/30 pb-2 mb-4 relative z-20">
                 <div className="flex items-center gap-2 text-neon-cyan">
-                    <Terminal size={16} />
+                    <Terminal size={16} aria-hidden="true" />
                     <span>visitor@arif-renggy: CLI_SESSION_ACTIVE</span>
                 </div>
                 <button 
+                    id="close-cli-btn"
                     onClick={onClose} 
                     className="text-gray-500 hover:text-terminal-accent transition-colors cursor-pointer"
+                    aria-label="Close CLI Terminal"
                 >
-                    <X size={18} />
+                    <X size={18} aria-hidden="true" />
                 </button>
             </div>
 
@@ -574,6 +576,7 @@ export default function InteractiveCli({ isOpen, onClose }) {
                 </span>
                 <input
                     ref={inputRef}
+                    id="cli-terminal-input"
                     type="text"
                     value={inputValue}
                     onChange={(e) => setInputValue(e.target.value)}
@@ -584,6 +587,8 @@ export default function InteractiveCli({ isOpen, onClose }) {
                     autoCorrect="off"
                     autoCapitalize="off"
                     spellCheck="false"
+                    aria-label="Command line input"
+                    placeholder="Type 'help' for available commands..."
                 />
             </div>
         </div>

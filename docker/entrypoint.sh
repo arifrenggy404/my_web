@@ -13,27 +13,25 @@ chown -R www-data:www-data /var/www/html/database_persistent
 chmod -R 775 /var/www/html/database_persistent
 
 # Inisialisasi database SQLite jika belum ada
+INITIAL_INSTALL=false
 if [ ! -f /var/www/html/database_persistent/database.sqlite ]; then
     echo "Membuat database SQLite baru..."
     touch /var/www/html/database_persistent/database.sqlite
     chown www-data:www-data /var/www/html/database_persistent/database.sqlite
     chmod 664 /var/www/html/database_persistent/database.sqlite
+    INITIAL_INSTALL=true
 fi
 
 # Jalankan migrasi database
 echo "Menjalankan migrasi database..."
 php artisan migrate --force
 
-# Seed database jika tabel proyek masih kosong
-echo "Memeriksa jumlah proyek..."
-PROYEK_COUNT=$(php -r "require 'vendor/autoload.php'; \$app = require_once 'bootstrap/app.php'; \$app->make(Illuminate\Contracts\Console\Kernel::class)->bootstrap(); echo App\Models\Proyek::count();" || echo "ERROR")
-
-if [ "$PROYEK_COUNT" = "ERROR" ]; then
-    echo "Gagal memeriksa jumlah proyek, mencoba menjalankan seeder..."
-    php artisan db:seed --force || echo "Gagal menjalankan seeder."
-elif [ "$PROYEK_COUNT" -eq 0 ]; then
-    echo "Menjalankan database seeder..."
+# Seed database hanya jika instalasi baru
+if [ "$INITIAL_INSTALL" = true ]; then
+    echo "Instalasi baru terdeteksi, menjalankan database seeder..."
     php artisan db:seed --force
+else
+    echo "Database sudah ada, melewati langkah seeding."
 fi
 
 # Optimasi Laravel untuk produksi

@@ -45,18 +45,18 @@ class ProyekResourceTest extends TestCase
     public function test_akses_panel_berdasarkan_domain_email()
     {
         // Memverifikasi bahwa email dengan huruf besar (misalnya USER@ARIFRENGGY.SITE) dapat mengakses panel.
-        $userUppercase = User::factory()->create(['email' => 'USER@ARIFRENGGY.SITE']);
+        $userUppercase = User::factory()->create(['email' => 'UPPER@ARIFRENGGY.SITE']);
         $this->actingAs($userUppercase)->get('/admin')->assertSuccessful();
 
         // Mengubah lingkungan aplikasi (environment) secara sementara ke produksi (production)
         $this->app->detectEnvironment(fn () => 'production');
 
         // Memverifikasi bahwa email non-@arifrenggy.site tidak dapat mengakses panel
-        $userGmail = User::factory()->create(['email' => 'user@gmail.com']);
+        $userGmail = User::factory()->create(['email' => 'test-user@gmail.com']);
         $this->actingAs($userGmail)->get('/admin')->assertForbidden();
 
         // Memverifikasi bahwa email valid @arifrenggy.site dengan huruf kecil dapat mengakses panel
-        $userLowercase = User::factory()->create(['email' => 'user@arifrenggy.site']);
+        $userLowercase = User::factory()->create(['email' => 'lower@arifrenggy.site']);
         $this->actingAs($userLowercase)->get('/admin')->assertSuccessful();
 
         // Memverifikasi bahwa email valid @arifrenggy.site dengan huruf besar dapat mengakses panel

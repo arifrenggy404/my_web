@@ -44,6 +44,99 @@ const applyTheme = (themeName) => {
     return true;
 };
 
+const virtualFileSystem = {
+    '/': {
+        type: 'dir',
+        children: ['home']
+    },
+    '/home': {
+        type: 'dir',
+        children: ['visitor']
+    },
+    '/home/visitor': {
+        type: 'dir',
+        children: ['identitas', 'misi', 'arsenal', 'komunikasi', 'readme.txt']
+    },
+    '/home/visitor/readme.txt': {
+        type: 'file',
+        content: [
+            '========================================',
+            'SELAMAT DATANG DI TERMINAL ARIF RENGGY',
+            '========================================',
+            'Gunakan perintah Linux standar untuk navigasi:',
+            '  ls      - Melihat isi folder',
+            '  cd      - Berpindah folder',
+            '  cat     - Membaca isi file teks',
+            '  pwd     - Melihat lokasi folder aktif saat ini',
+            ''
+        ]
+    },
+    '/home/visitor/identitas': {
+        type: 'dir',
+        children: ['profil.txt'],
+        route: '/identitas'
+    },
+    '/home/visitor/identitas/profil.txt': {
+        type: 'file',
+        content: [
+            '--- PROFIL IDENTITAS INTI ---',
+            'NAMA: Arif Renggy',
+            'PERAN: Fullstack Developer',
+            'WILAYAH: Indonesia',
+            'BIO: Arsitek Sistem yang berspesialisasi dalam',
+            '     membangun infrastruktur digital menggunakan Laravel.',
+            ''
+        ]
+    },
+    '/home/visitor/misi': {
+        type: 'dir',
+        children: ['status.txt'],
+        route: '/misi'
+    },
+    '/home/visitor/misi/status.txt': {
+        type: 'file',
+        content: [
+            '--- STATUS MISI DIGITAL ---',
+            'SEMUA PROYEK: BERHASIL DISELESAIKAN',
+            'Ketik "projects" atau "misi" untuk mengambil data misi dari database.',
+            ''
+        ]
+    },
+    '/home/visitor/arsenal': {
+        type: 'dir',
+        children: ['alutsista.txt'],
+        route: '/arsenal'
+    },
+    '/home/visitor/arsenal/alutsista.txt': {
+        type: 'file',
+        content: [
+            '--- DAFTAR ALUTSISTA / KEAHLIAN ---',
+            '  Laravel      - 95%',
+            '  React        - 85%',
+            '  Tailwind CSS - 90%',
+            '  Inertia.js   - 88%',
+            '  SQLite       - 80%',
+            '  Docker       - 75%',
+            ''
+        ]
+    },
+    '/home/visitor/komunikasi': {
+        type: 'dir',
+        children: ['jalur.txt'],
+        route: '/jalur-komunikasi'
+    },
+    '/home/visitor/komunikasi/jalur.txt': {
+        type: 'file',
+        content: [
+            '--- SALURAN KOMUNIKASI TERENKRIPSI ---',
+            '  GitHub: https://github.com/arifrenggy00',
+            '  Email: arifrenggy404@gmail.com',
+            '  LinkedIn: Arif Renggy',
+            ''
+        ]
+    }
+};
+
 export default function InteractiveCli({ isOpen, onClose }) {
     const [history, setHistory] = useState([]);
     const [historyIndex, setHistoryIndex] = useState(-1);

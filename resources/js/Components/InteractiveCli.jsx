@@ -1,5 +1,27 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Terminal, X } from 'lucide-react';
+import { router } from '@inertiajs/react';
+
+const resolveAbsolutePath = (current, target) => {
+    if (!target) return current;
+    if (target.startsWith('/')) {
+        const parts = target.split('/').filter(Boolean);
+        return '/' + parts.join('/');
+    }
+    
+    const currentParts = current.split('/').filter(Boolean);
+    const targetParts = target.split('/').filter(Boolean);
+    
+    for (const part of targetParts) {
+        if (part === '..') {
+            if (currentParts.length > 0) currentParts.pop();
+        } else if (part !== '.') {
+            currentParts.push(part);
+        }
+    }
+    
+    return '/' + currentParts.join('/');
+};
 
 const themes = {
     cyber: {
@@ -228,7 +250,7 @@ export default function InteractiveCli({ isOpen, onClose }) {
             const input = inputValue.trim();
             if (!input) return;
 
-            const updatedLogs = [...logs, `visitor@arif-renggy:~$ ${input}`];
+            const updatedLogs = [...logs, `visitor@arif-renggy:${currentPath.replace(/^\/home\/visitor/, '~')}$ ${input}`];
             setLogs(updatedLogs);
             setHistory(prev => [...prev, input]);
             setHistoryIndex(-1);
@@ -257,6 +279,10 @@ export default function InteractiveCli({ isOpen, onClose }) {
                         '  ping                  - Test connection latency',
                         '  matrix                - Run canvas code waterfall',
                         '  theme [theme_name]    - Swaps system UI color palette',
+                        '  ls                    - List directory contents',
+                        '  cd [dir]              - Change active directory (syncs page)',
+                        '  cat [file]            - Display file contents',
+                        '  pwd                   - Print working directory path',
                         '  history               - History of input commands',
                         '  clear                 - Clean terminal window buffer',
                         '  exit / gui / close    - Re-engage graphical GUI',
@@ -386,6 +412,71 @@ export default function InteractiveCli({ isOpen, onClose }) {
 
                 case 'clear':
                     setLogs([]);
+                    break;
+
+                case 'pwd':
+                    setLogs(prev => [...prev, currentPath, '']);
+                    break;
+
+                case 'ls':
+                    const dirNode = virtualFileSystem[currentPath];
+                    if (dirNode && dirNode.type === 'dir') {
+                        const listedItems = dirNode.children.map(childName => {
+                            const fullChildPath = currentPath === '/' ? `/${childName}` : `${currentPath}/${childName}`;
+                            const childNode = virtualFileSystem[fullChildPath];
+                            return childNode && childNode.type === 'dir' ? `${childName}/` : childName;
+                        });
+                        if (listedItems.length > 0) {
+                            setLogs(prev => [...prev, listedItems.join('   '), '']);
+                        } else {
+                            setLogs(prev => [...prev, '']);
+                        }
+                    } else {
+                        setLogs(prev => [...prev, 'ERROR: Cannot list directory.', '']);
+                    }
+                    break;
+
+                case 'cat':
+                    const catTarget = args[1];
+                    if (!catTarget) {
+                        setLogs(prev => [...prev, '']);
+                    } else {
+                        const targetFilePath = resolveAbsolutePath(currentPath, catTarget);
+                        const fileNode = virtualFileSystem[targetFilePath];
+                        if (fileNode) {
+                            if (fileNode.type === 'file') {
+                                setLogs(prev => [...prev, ...fileNode.content, '']);
+                            } else {
+                                setLogs(prev => [...prev, `cat: ${catTarget}: Is a directory`, '']);
+                            }
+                        } else {
+                            setLogs(prev => [...prev, `cat: ${catTarget}: No such file or directory`, '']);
+                        }
+                    }
+                    break;
+
+                case 'cd':
+                    const cdTarget = args[1];
+                    if (!cdTarget) {
+                        setCurrentPath('/home/visitor');
+                        setLogs(prev => [...prev, '']);
+                    } else {
+                        const targetDirPath = resolveAbsolutePath(currentPath, cdTarget);
+                        const targetNode = virtualFileSystem[targetDirPath];
+                        if (targetNode) {
+                            if (targetNode.type === 'dir') {
+                                setCurrentPath(targetDirPath);
+                                setLogs(prev => [...prev, '']);
+                                if (targetNode.route) {
+                                    router.visit(targetNode.route);
+                                }
+                            } else {
+                                setLogs(prev => [...prev, `-bash: cd: ${cdTarget}: Not a directory`, '']);
+                            }
+                        } else {
+                            setLogs(prev => [...prev, `-bash: cd: ${cdTarget}: No such file or directory`, '']);
+                        }
+                    }
                     break;
 
                 case 'theme':

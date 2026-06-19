@@ -1,8 +1,9 @@
 import React from 'react';
-import { Head } from '@inertiajs/react';
+import { Head, usePage } from '@inertiajs/react';
 import ArsipLayout from '../Layouts/ArsipLayout';
 
 export default function Arsenal({ skills }) {
+    const { pengaturan } = usePage().props;
     // Mapping warna database ke CSS variables
     const getWarnaVariable = (colorName) => {
         switch (colorName) {
@@ -85,7 +86,7 @@ export default function Arsenal({ skills }) {
                 <div className="p-4 border border-dashed border-gray-800 opacity-40 hover:opacity-100 transition-opacity">
                     <div className="text-[10px] font-mono text-gray-500 mb-2 uppercase tracking-widest">Analisis_Tambahan:</div>
                     <p className="text-[11px] text-gray-400 font-mono leading-relaxed">
-                        Sistem arsenal terus diperbarui. Memiliki kemahiran mendalam dalam integrasi modul Laravel 13, optimalisasi database SQLite, dan pengembangan antarmuka reaktif menggunakan React 19.
+                        {pengaturan?.analisis_tambahan_arsenal || 'Sistem arsenal terus diperbarui. Memiliki kemahiran mendalam dalam integrasi modul Laravel 13, optimalisasi database SQLite, dan pengembangan antarmuka reaktif menggunakan React 19.'}
                     </p>
                 </div>
             </div>

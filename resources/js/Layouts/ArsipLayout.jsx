@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, router } from '@inertiajs/react';
+import { Link, router, usePage } from '@inertiajs/react';
 import { Terminal, Cpu, Layers, Zap, MessageSquare } from 'lucide-react';
 import AsciiHeader from '../Components/AsciiHeader';
 import TerminalStatusBar from '../Components/TerminalStatusBar';
@@ -9,6 +9,7 @@ import InteractiveCli from '../Components/InteractiveCli';
 import TelemetryWidget from '../Components/TelemetryWidget';
 
 export default function ArsipLayout({ children }) {
+    const { pengaturan } = usePage().props;
     const [logs, setLogs] = useState([]);
     const [isCliOpen, setIsCliOpen] = useState(false);
     const [isTransitioning, setIsTransitioning] = useState(false);
@@ -116,7 +117,7 @@ export default function ArsipLayout({ children }) {
             )}
             
             <header className="max-w-7xl mx-auto border-b border-terminal/30 pb-1 mb-8 flex flex-col items-center gap-4 relative z-10">
-                <h1 className="sr-only">Arif Renggy - Portofolio Developer Laravel & React</h1>
+                <h1 className="sr-only">{pengaturan?.nama_aplikasi || 'Arif Renggy'} - Portofolio Developer Laravel & React</h1>
                 
                 {/* Row 1: ASCII Art (Centered) */}
                 <div className="w-full flex justify-center py-2">

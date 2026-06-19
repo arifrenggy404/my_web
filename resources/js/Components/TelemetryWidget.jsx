@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import { usePage } from '@inertiajs/react';
 
 export default function TelemetryWidget() {
+    const { pengaturan } = usePage().props;
     const [ip, setIp] = useState('127.0.0.1');
     const [node, setNode] = useState('UNKNOWN_NODE');
     const [battery, setBattery] = useState({ level: 100, charging: true, supported: false });
@@ -84,7 +86,7 @@ export default function TelemetryWidget() {
                     SESSION: ACTIVE
                 </div>
                 <div className="text-gray-700">|</div>
-                <div><span className="text-terminal-primary">VER:</span> v4.0.1</div>
+                <div><span className="text-terminal-primary">VER:</span> {pengaturan?.versi || 'v4.0.1'}</div>
             </div>
         </div>
     );

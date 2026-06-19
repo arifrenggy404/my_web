@@ -25,5 +25,7 @@ Route::get('/arsenal', function () {
 });
 
 Route::get('/jalur-komunikasi', function () {
-    return Inertia::render('Kontak');
+    return Inertia::render('Kontak', [
+        'contacts' => \App\Models\Kontak::orderBy('urutan')->get(),
+    ]);
 });

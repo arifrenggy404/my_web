@@ -1,5 +1,5 @@
 import React from 'react';
-import { Head } from '@inertiajs/react';
+import { Head, usePage } from '@inertiajs/react';
 import ArsipLayout from '../Layouts/ArsipLayout';
 import { MessageSquare, Globe, Mail, ChevronRight } from 'lucide-react';
 
@@ -17,13 +17,44 @@ const IkonLinkedin = ({ size = 20, ...props }) => (
   </svg>
 );
 
-export default function Kontak() {
-    const contacts = [
-        { name: 'GitHub', icon: IkonGithub, url: 'https://github.com/arifrenggy00', label: '@arifrenggy00', color: 'hover:text-white' },
-        { name: 'LinkedIn', icon: IkonLinkedin, url: '#', label: 'Arif Renggy', color: 'hover:text-terminal-primary' },
-        { name: 'WhatsApp', icon: MessageSquare, url: '#', label: 'MISI_LANGSUNG', color: 'hover:text-terminal-warning' },
-        { name: 'Email', icon: Mail, url: 'mailto:arifrenggy404@gmail.com', label: 'arifrenggy404@gmail.com', color: 'hover:text-terminal-accent' },
-        { name: 'Website', icon: Globe, url: 'https://portofolio-cyberpunk-production.up.railway.app', label: 'PORT_PROD_V1', color: 'hover:text-terminal-primary' }
+export default function Kontak({ contacts }) {
+    const { pengaturan } = usePage().props;
+    const getIcon = (type) => {
+        switch (type) {
+            case 'github': return IkonGithub;
+            case 'linkedin': return IkonLinkedin;
+            case 'whatsapp': return MessageSquare;
+            case 'email': return Mail;
+            default: return Globe;
+        }
+    };
+
+    const getColorClass = (warna) => {
+        switch (warna) {
+            case 'accent': return 'hover:text-terminal-accent';
+            case 'warning': return 'hover:text-terminal-warning';
+            case 'white': return 'hover:text-white';
+            default: return 'hover:text-terminal-primary';
+        }
+    };
+
+    const formatUrl = (url) => {
+        if (!url) return '#';
+        if (/^(mailto:|tel:|https?:\/\/)/i.test(url)) {
+            return url;
+        }
+        if (url === '#') {
+            return url;
+        }
+        return `https://${url}`;
+    };
+
+    const activeContacts = (contacts && contacts.length > 0) ? contacts : [
+        { nama: 'GitHub', tipe_ikon: 'github', tautan_url: 'https://github.com/arifrenggy00', username_label: '@arifrenggy00', warna_hover: 'white' },
+        { nama: 'LinkedIn', tipe_ikon: 'linkedin', tautan_url: '#', username_label: 'Arif Renggy', warna_hover: 'primary' },
+        { nama: 'WhatsApp', tipe_ikon: 'whatsapp', tautan_url: '#', username_label: 'MISI_LANGSUNG', warna_hover: 'warning' },
+        { nama: 'Email', tipe_ikon: 'email', tautan_url: 'mailto:arifrenggy404@gmail.com', username_label: 'arifrenggy404@gmail.com', warna_hover: 'accent' },
+        { nama: 'Website', tipe_ikon: 'website', tautan_url: 'https://portofolio-cyberpunk-production.up.railway.app', username_label: 'PORT_PROD_V1', warna_hover: 'primary' }
     ];
 
     return (
@@ -53,43 +84,48 @@ export default function Kontak() {
                 </div>
 
                 <ul className="grid grid-cols-1 gap-4">
-                    {contacts.map(link => (
-                        <li key={link.name}>
-                            <a 
-                                id={`contact-link-${link.name.toLowerCase()}`}
-                                href={link.url} 
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="flex items-center justify-between p-5 border border-gray-800 bg-[#1a1a1c]/20 hover:border-terminal-primary hover:bg-terminal-primary/5 group transition-all relative overflow-hidden"
-                                aria-label={`Hubungkan melalui ${link.name} (terbuka di tab baru)`}
-                            >
-                                {/* Efek Hover Background */}
-                                <div className="absolute top-0 left-0 w-1 h-full bg-terminal-primary scale-y-0 group-hover:scale-y-100 transition-transform origin-top"></div>
-                                
-                                <div className="flex items-center gap-5 relative z-10">
-                                    <div className={`p-2 border border-gray-800 bg-black group-hover:border-terminal-primary/50 transition-colors ${link.color}`}>
-                                        <link.icon size={20} aria-hidden="true" />
+                    {activeContacts.map(link => {
+                        const IconComponent = getIcon(link.tipe_ikon);
+                        const hoverColorClass = getColorClass(link.warna_hover);
+                        
+                        return (
+                            <li key={link.nama}>
+                                <a 
+                                    id={`contact-link-${link.nama.toLowerCase()}`}
+                                    href={formatUrl(link.tautan_url)} 
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="flex items-center justify-between p-5 border border-gray-800 bg-[#1a1a1c]/20 hover:border-terminal-primary hover:bg-terminal-primary/5 group transition-all relative overflow-hidden"
+                                    aria-label={`Hubungkan melalui ${link.nama} (terbuka di tab baru)`}
+                                >
+                                    {/* Efek Hover Background */}
+                                    <div className="absolute top-0 left-0 w-1 h-full bg-terminal-primary scale-y-0 group-hover:scale-y-100 transition-transform origin-top"></div>
+                                    
+                                    <div className="flex items-center gap-5 relative z-10">
+                                        <div className={`p-2 border border-gray-800 bg-black group-hover:border-terminal-primary/50 transition-colors ${hoverColorClass}`}>
+                                            <IconComponent size={20} aria-hidden="true" />
+                                        </div>
+                                        <div className="space-y-0.5">
+                                            <span className="font-mono text-xs text-gray-500 uppercase tracking-tighter group-hover:text-gray-300">HUBUNGKAN_MELALUI</span>
+                                            <div className="font-mono text-sm font-black uppercase tracking-tight group-hover:text-terminal-primary">{link.nama}</div>
+                                        </div>
                                     </div>
-                                    <div className="space-y-0.5">
-                                        <span className="font-mono text-xs text-gray-500 uppercase tracking-tighter group-hover:text-gray-300">HUBUNGKAN_MELALUI</span>
-                                        <div className="font-mono text-sm font-black uppercase tracking-tight group-hover:text-terminal-primary">{link.name}</div>
+                                    
+                                    <div className="flex items-center gap-3 relative z-10">
+                                        <span className="text-xs text-gray-600 font-mono tracking-tighter group-hover:text-terminal-warning">{link.username_label}</span>
+                                        <ChevronRight size={14} className="text-gray-800 group-hover:text-terminal-primary transition-colors" aria-hidden="true" />
                                     </div>
-                                </div>
-                                
-                                <div className="flex items-center gap-3 relative z-10">
-                                    <span className="text-xs text-gray-600 font-mono tracking-tighter group-hover:text-terminal-warning">{link.label}</span>
-                                    <ChevronRight size={14} className="text-gray-800 group-hover:text-terminal-primary transition-colors" aria-hidden="true" />
-                                </div>
-                            </a>
-                        </li>
-                    ))}
+                                </a>
+                            </li>
+                        );
+                    })}
                 </ul>
                 
                 <div className="mt-12 p-6 border border-gray-800 bg-black/40 font-mono relative">
                     <div className="text-[10px] text-terminal-accent mb-4 uppercase tracking-widest text-neon-pink">// CATATAN_PENGEMBANG:</div>
                     <div className="text-xs text-gray-400 leading-relaxed space-y-2">
-                        <p>Pesan yang dikirim melalui saluran ini akan diproses melalui pipeline enkripsi asimetris.</p>
-                        <p>Waktu respons rata-rata: <span className="text-terminal-primary">12-24 Jam Standar Sektor</span>.</p>
+                        <p>{pengaturan?.catatan_pengembang_kontak || 'Pesan yang dikirim melalui saluran ini akan diproses melalui pipeline enkripsi asimetris.'}</p>
+                        <p>Waktu respons rata-rata: <span className="text-terminal-primary">{pengaturan?.waktu_respons_kontak || '12-24 Jam Standar Sektor'}</span>.</p>
                     </div>
                 </div>
             </div>
